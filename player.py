@@ -1,11 +1,12 @@
 import pygame
 from settings import *
+from support import import_folder
 
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, groups, obstacle_sprites):
         super().__init__(groups)
-        self.image = pygame.image.load("./images/BlueSamurai/player.png")
+        self.image = pygame.image.load("./images/graphics/jin/jin_test.png")
         self.rect = self.image.get_rect(topleft=pos)
         self.hitbox = self.rect.inflate(0, -26)
 
@@ -22,7 +23,7 @@ class Player(pygame.sprite.Sprite):
         self.obstacle_sprites = obstacle_sprites
 
     def import_player_assets(self):
-        character_path = "./images/sprites/jin"
+        character_path = "./images/graphics/player/"
         self.animations = {
             "up": [],
             "down": [],
@@ -39,7 +40,9 @@ class Player(pygame.sprite.Sprite):
         }
 
         for animation in self.animations.keys():
-            print(animation)
+            full_path = character_path + animation
+            self.animations[animation] = import_folder(full_path)
+        print(self.animations)
 
     def input(self):
         keys = pygame.key.get_pressed()
