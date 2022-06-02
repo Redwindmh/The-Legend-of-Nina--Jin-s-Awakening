@@ -12,6 +12,9 @@ class Player(pygame.sprite.Sprite):
 
         # graphics setup
         self.import_player_assets()
+        self.status = "down"
+        self.frame_index = 0
+        self.animation_speed = 0.15
 
         # movement
         self.direction = pygame.math.Vector2()
@@ -42,37 +45,60 @@ class Player(pygame.sprite.Sprite):
         for animation in self.animations.keys():
             full_path = character_path + animation
             self.animations[animation] = import_folder(full_path)
-        print(self.animations)
 
     def input(self):
-        keys = pygame.key.get_pressed()
+        # comment out this if statement to allow player to move when attacking
+        if not self.attacking:
+            keys = pygame.key.get_pressed()
 
-        # movement input
-        if keys[pygame.K_UP]:
-            self.direction.y = -1
-        elif keys[pygame.K_DOWN]:
-            self.direction.y = 1
-        else:
-            self.direction.y = 0
+            # movement input
+            if keys[pygame.K_UP]:
+                self.direction.y = -1
+                self.status = "up"
+            elif keys[pygame.K_DOWN]:
+                self.direction.y = 1
+                self.status = "down"
+            else:
+                self.direction.y = 0
 
-        if keys[pygame.K_RIGHT]:
-            self.direction.x = 1
-        elif keys[pygame.K_LEFT]:
-            self.direction.x = -1
-        else:
+            if keys[pygame.K_RIGHT]:
+                self.direction.x = 1
+                self.status = "right"
+            elif keys[pygame.K_LEFT]:
+                self.direction.x = -1
+                self.status = "left"
+            else:
+                self.direction.x = 0
+
+            # attack input
+            if keys[pygame.K_SPACE]:
+                self.attacking = True
+                self.attack_time = pygame.time.get_ticks()
+
+            # magic input
+            if keys[pygame.K_LSHIFT]:
+                self.attacking = True
+                self.attack_time = pygame.time.get_ticks()
+
+    def get_status(self):
+
+        # idle status
+        if self.direction.x == 0 and self.direction.y == 0:
+            if not "idle" in self.status and not "attack" in self.status:
+                self.status = self.status + "_idle"
+
+        if self.attacking:
+            # comment these two lines out to attack while moving
             self.direction.x = 0
-
-        # attack input
-        if keys[pygame.K_SPACE] and not self.attacking:
-            self.attacking = True
-            self.attack_time = pygame.time.get_ticks()
-            print("attack!")
-
-        # magic input
-        if keys[pygame.K_LSHIFT] and not self.attacking:
-            self.attacking = True
-            self.attack_time = pygame.time.get_ticks()
-            print("magic!")
+            self.direction.y = 0
+            if not "attack" in self.status:
+                if "idle" in self.status:
+                    self.status = self.status.replace("_idle", "_attack")
+                else:
+                    self.status = self.status + "_attack"
+        else:
+            if "attack" in self.status:
+                self.status = self.status.replace("_attack", "")
 
     def move(self, speed):
         if self.direction.magnitude() != 0:
@@ -108,7 +134,21 @@ class Player(pygame.sprite.Sprite):
             if current_time - self.attack_time >= self.attack_cooldown:
                 self.attacking = False
 
+    def animate(self):
+        animation = self.animations[self.status]
+
+        # loop over frame index
+        self.frame_index += self.animation_speed
+        if self.frame_index >= len(animation):
+            self.frame_index = 0
+
+        # set the image
+        self.image = animation[int(self.frame_index)]
+        self.rect = self.image.get_rect(center=self.hitbox.center)
+
     def update(self):
         self.input()
         self.cooldowns()
+        self.get_status()
+        self.animate()
         self.move(self.speed)
