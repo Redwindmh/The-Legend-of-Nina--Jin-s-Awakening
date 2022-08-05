@@ -5,6 +5,25 @@ HEIGHT = 720
 FPS = 60
 TILESIZE = 64
 
+# User interface
+BAR_HEIGHT = 20
+HEALTH_BAR_WIDTH = 200
+ENERGY_BAR_WIDTH = 140
+ITEM_BOX_SIZE = 80
+UI_FONT = "./images/graphics/font/joystix.tff"
+UI_FONT_SIZE = 18
+
+# General colors
+WATER_COLOR = "#71DDEE"
+UI_BF_COLOR = "#222222"
+UI_BORDER = COLOR = "#111111"
+TEXT_COLOR = "#EEEEEE"
+
+# UI colors
+HEALTH_COLOR = "red"
+ENERGY_COLOR = "blue"
+UI_BORDER_COLOR_ACTIVE = "gold"
+
 # Weapons
 weapon_data = {
     "sword": {
