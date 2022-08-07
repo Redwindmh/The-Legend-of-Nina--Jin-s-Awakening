@@ -10,13 +10,13 @@ BAR_HEIGHT = 20
 HEALTH_BAR_WIDTH = 200
 ENERGY_BAR_WIDTH = 140
 ITEM_BOX_SIZE = 80
-UI_FONT = "./images/graphics/font/joystix.tff"
+UI_FONT = "./images/graphics/font/joystix.ttf"
 UI_FONT_SIZE = 18
 
 # General colors
 WATER_COLOR = "#71DDEE"
-UI_BF_COLOR = "#222222"
-UI_BORDER = COLOR = "#111111"
+UI_BG_COLOR = "#222222"
+UI_BORDER_COLOR = "white"
 TEXT_COLOR = "#EEEEEE"
 
 # UI colors

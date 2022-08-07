@@ -37,7 +37,7 @@ class Player(pygame.sprite.Sprite):
         self.stats = {"health": 100, "energy": 60, "attack": 10, "magic": 4, "speed": 5}
         self.health = self.stats["health"]
         self.energy = self.stats["energy"]
-        self.exp = 0
+        self.exp = 123
         self.speed = self.stats["speed"]
 
     def import_player_assets(self):

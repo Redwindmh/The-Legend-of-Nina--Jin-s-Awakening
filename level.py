@@ -25,7 +25,7 @@ class Level:
         self.create_map()
 
         # user interface
-        self.ui = UI
+        self.ui = UI()
 
     def create_map(self):
         layouts = {
@@ -90,7 +90,7 @@ class Level:
         self.current_attack = None
 
     def run(self):
-        # update and draw the game
+        # Update and draw the game
         self.visible_sprites.custom_draw(self.player)
         self.visible_sprites.update()
         self.ui.display(self.player)
