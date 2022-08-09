@@ -52,3 +52,17 @@ weapon_data = {
         "graphic": "./images/graphics/weapons/sai/full.png",
     },
 }
+
+# Magic
+magic_date = {
+    "flame": {
+        "strength": 5,
+        "cost": 20,
+        "graphic": "./images/graphics/particles/flame/fire.png",
+    },
+    "heal": {
+        "strength": 20,
+        "cost": 10,
+        "graphic": "./images/graphics/particles/flame/heal.png",
+    },
+}

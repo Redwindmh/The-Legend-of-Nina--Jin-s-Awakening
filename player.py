@@ -10,13 +10,13 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=pos)
         self.hitbox = self.rect.inflate(0, -26)
 
-        # graphics setup
+        # Graphics setup
         self.import_player_assets()
         self.status = "down"
         self.frame_index = 0
         self.animation_speed = 0.15
 
-        # movement
+        # Movement
         self.direction = pygame.math.Vector2()
         self.attacking = False
         self.attack_cooldown = 200
@@ -24,7 +24,7 @@ class Player(pygame.sprite.Sprite):
 
         self.obstacle_sprites = obstacle_sprites
 
-        # weapon
+        # Weapons
         self.create_attack = create_attack
         self.destroy_attack = destroy_attack
         self.weapon_index = 0
@@ -32,6 +32,9 @@ class Player(pygame.sprite.Sprite):
         self.can_switch_weapon = True
         self.weapon_switch_time = None
         self.switch_duration_cooldown = 200
+
+        # Magic
+        self.magic_index = 0
 
         # stats
         self.stats = {"health": 100, "energy": 60, "attack": 10, "magic": 4, "speed": 5}
@@ -62,11 +65,11 @@ class Player(pygame.sprite.Sprite):
             self.animations[animation] = import_folder(full_path)
 
     def input(self):
-        # comment out this if statement to allow player to move when attacking
+        # Comment out this if statement to allow player to move when attacking
         if not self.attacking:
             keys = pygame.key.get_pressed()
 
-            # movement input
+            # Movement input
             if keys[pygame.K_UP] or keys[ord("w")]:
                 self.direction.y = -1
                 self.status = "up"
@@ -85,13 +88,13 @@ class Player(pygame.sprite.Sprite):
             else:
                 self.direction.x = 0
 
-            # attack input
+            # Attack input
             if keys[pygame.K_SPACE]:
                 self.attacking = True
                 self.attack_time = pygame.time.get_ticks()
                 self.create_attack()
 
-            # magic input
+            # Magic input
             if keys[pygame.K_LSHIFT]:
                 self.attacking = True
                 self.attack_time = pygame.time.get_ticks()
