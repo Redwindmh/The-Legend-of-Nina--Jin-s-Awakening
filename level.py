@@ -78,8 +78,8 @@ class Level:
             [self.visible_sprites],
             self.obstacle_sprites,
             self.create_attack,
-            self.create_magic,
             self.destroy_attack,
+            self.create_magic,
         )
 
     def create_attack(self):
