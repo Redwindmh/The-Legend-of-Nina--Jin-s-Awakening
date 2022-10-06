@@ -8,6 +8,7 @@ from support import *
 from random import choice, random
 from weapon import Weapon
 from ui import UI
+from enemy import Enemy
 
 
 class Level:
@@ -32,6 +33,7 @@ class Level:
             "boundary": import_csv_layout("./map/map_FloorBlocks.csv"),
             "grass": import_csv_layout("./map/map_Grass.csv"),
             "object": import_csv_layout("./map/map_LargeObjects.csv"),
+            "entities": import_csv_layout("./map/map_Entities.csv")
         }
         graphics = {
             "grass": import_folder("./images/graphics/grass"),
@@ -66,6 +68,20 @@ class Level:
                                 "object",
                                 surf,
                             )
+
+                        if style == "entities":
+                            if col == "394":
+                                    self.player = Player(
+                                        (x, y),
+                                        [self.visible_sprites],
+                                        self.obstacle_sprites,
+                                        self.create_attack,
+                                        self.destroy_attack,
+                                        self.create_magic,
+                                        )
+                            else:
+                                Enemy('monster', (x,y),[self.visible_sprites])
+
         #         if col == "x":
         #             Tile((x, y), [self.visible_sprites, self.obstacle_sprites])
         #         if col == "p":
@@ -73,14 +89,6 @@ class Level:
         #                 (x, y), [self.visible_sprites], self.obstacle_sprites
         #             )
 
-        self.player = Player(
-            (2000, 1420),
-            [self.visible_sprites],
-            self.obstacle_sprites,
-            self.create_attack,
-            self.destroy_attack,
-            self.create_magic,
-        )
 
     def create_attack(self):
         self.current_attack = Weapon(self.player, [self.visible_sprites])
