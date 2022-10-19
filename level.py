@@ -33,7 +33,7 @@ class Level:
             "boundary": import_csv_layout("./map/map_FloorBlocks.csv"),
             "grass": import_csv_layout("./map/map_Grass.csv"),
             "object": import_csv_layout("./map/map_LargeObjects.csv"),
-            "entities": import_csv_layout("./map/map_Entities.csv")
+            "entities": import_csv_layout("./map/map_Entities.csv"),
         }
         graphics = {
             "grass": import_folder("./images/graphics/grass"),
@@ -71,16 +71,25 @@ class Level:
 
                         if style == "entities":
                             if col == "394":
-                                    self.player = Player(
-                                        (x, y),
-                                        [self.visible_sprites],
-                                        self.obstacle_sprites,
-                                        self.create_attack,
-                                        self.destroy_attack,
-                                        self.create_magic,
-                                        )
+                                self.player = Player(
+                                    (x, y),
+                                    [self.visible_sprites],
+                                    self.obstacle_sprites,
+                                    self.create_attack,
+                                    self.destroy_attack,
+                                    self.create_magic,
+                                )
                             else:
-                                Enemy('monster', (x,y),[self.visible_sprites])
+                                # Make this into a switch statement so more enemies can be added
+                                if col == "390":
+                                    enemy_name = "bamboo"
+                                elif col == "391":
+                                    enemy_name = "spirit"
+                                elif col == "392":
+                                    enemy_name = "raccoon"
+                                else:
+                                    enemy_name = "squid"
+                                Enemy(enemy_name, (x, y), [self.visible_sprites])
 
         #         if col == "x":
         #             Tile((x, y), [self.visible_sprites, self.obstacle_sprites])
@@ -89,11 +98,10 @@ class Level:
         #                 (x, y), [self.visible_sprites], self.obstacle_sprites
         #             )
 
-
     def create_attack(self):
         self.current_attack = Weapon(self.player, [self.visible_sprites])
 
-    def create_magic(self,style,strength,cost):
+    def create_magic(self, style, strength, cost):
         print(style)
         print(strength)
         print(cost)
