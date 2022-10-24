@@ -89,7 +89,7 @@ class Level:
                                     enemy_name = "raccoon"
                                 else:
                                     enemy_name = "squid"
-                                Enemy(enemy_name, (x, y), [self.visible_sprites])
+                                Enemy(enemy_name, (x, y), [self.visible_sprites],self.obstacle_sprites)
 
         #         if col == "x":
         #             Tile((x, y), [self.visible_sprites, self.obstacle_sprites])
