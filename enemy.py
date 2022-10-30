@@ -62,6 +62,10 @@ class Enemy(Entity):
         else:
             self.status = "idle"
 
+    def actions(self,player):
+        if self.status == 'attack':
+            
+
     def update(self):
         self.move(self.speed)
 
