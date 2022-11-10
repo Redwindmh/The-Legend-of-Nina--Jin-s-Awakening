@@ -21,6 +21,8 @@ class Level:
 
         # attack sprites
         self.current_attack = None
+        self.attack_sprites = pygame.sprite.Group()
+        self.attackable_sprites = pygame.sprite.Group()
 
         # sprite setup
         self.create_map()
@@ -56,7 +58,11 @@ class Level:
                             random_grass_image = choice(graphics["grass"])
                             Tile(
                                 (x, y),
-                                [self.visible_sprites, self.obstacle_sprites],
+                                [
+                                    self.visible_sprites,
+                                    self.obstacle_sprites,
+                                    self.attackable_sprites,
+                                ],
                                 "grass",
                                 random_grass_image,
                             )
@@ -89,7 +95,12 @@ class Level:
                                     enemy_name = "raccoon"
                                 else:
                                     enemy_name = "squid"
-                                Enemy(enemy_name, (x, y), [self.visible_sprites],self.obstacle_sprites)
+                                Enemy(
+                                    enemy_name,
+                                    (x, y),
+                                    [self.visible_sprites, self.attackable_sprites],
+                                    self.obstacle_sprites,
+                                )
 
         #         if col == "x":
         #             Tile((x, y), [self.visible_sprites, self.obstacle_sprites])
@@ -99,7 +110,9 @@ class Level:
         #             )
 
     def create_attack(self):
-        self.current_attack = Weapon(self.player, [self.visible_sprites])
+        self.current_attack = Weapon(
+            self.player, [self.visible_sprites, self.attack_sprites]
+        )
 
     def create_magic(self, style, strength, cost):
         print(style)
@@ -110,6 +123,9 @@ class Level:
         if self.current_attack:
             self.current_attack.kill()
         self.current_attack = None
+
+    def player_attack_logic(self):
+        # work from here
 
     def run(self):
         # Update and draw the game
@@ -146,8 +162,11 @@ class YSortCameraGroup(pygame.sprite.Group):
             offset_pos = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.image, offset_pos)
 
-    def enemy_update(self,player):
-        def __init__(self):
-            enemy_sprites = [sprite for sprite in self.sprites() if hasattr(sprite, 'sprite_type') and sprite.sprite_type == 'enemy']
-            for enemy in enemy_sprites:
-                enemy.enemy_update(player)
+    def enemy_update(self, player):
+        enemy_sprites = [
+            sprite
+            for sprite in self.sprites()
+            if hasattr(sprite, "sprite_type") and sprite.sprite_type == "enemy"
+        ]
+        for enemy in enemy_sprites:
+            enemy.enemy_update(player)

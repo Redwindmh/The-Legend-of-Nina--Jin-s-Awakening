@@ -61,7 +61,7 @@ class Enemy(Entity):
         distance = self.get_player_distance_direction(player)[0]
 
         if distance <= self.attack_radius and self.can_attack:
-            if self.status != 'attack':
+            if self.status != "attack":
                 self.frame_index = 0
             self.status = "attack"
         elif distance <= self.notice_radius:
@@ -69,11 +69,11 @@ class Enemy(Entity):
         else:
             self.status = "idle"
 
-    def actions(self,player):
-        if self.status == 'attack':
+    def actions(self, player):
+        if self.status == "attack":
             self.attack_time = pygame.time.get_ticks()
-            print('attack')
-        elif self.status == 'move':
+            print("attack")
+        elif self.status == "move":
             self.direction = self.get_player_distance_direction(player)[1]
         else:
             self.direction = pygame.math.Vector2()
@@ -83,12 +83,12 @@ class Enemy(Entity):
 
         self.frame_index += self.animation_speed
         if self.frame_index >= len(animation):
-            if self.status == 'attack':
+            if self.status == "attack":
                 self.can_attack = False
             self.frame_index = 0
 
         self.image = animation[int(self.frame_index)]
-        self.rect = self.image.get_rect(center = self.hitbox.center)
+        self.rect = self.image.get_rect(center=self.hitbox.center)
 
     def hit_cooldown(self):
         if not self.can_attack:
@@ -101,6 +101,6 @@ class Enemy(Entity):
         self.animate()
         self.hit_cooldown()
 
-    def enemy_update(self,player):
+    def enemy_update(self, player):
         self.get_status(player)
         self.actions(player)
