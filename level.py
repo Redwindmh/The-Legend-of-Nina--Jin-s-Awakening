@@ -125,7 +125,14 @@ class Level:
         self.current_attack = None
 
     def player_attack_logic(self):
-        # work from here
+        if self.attack_sprites:
+            for attack_sprite in attack_sprites:
+                collision_sprites = pygame.sprite.spritecollide(
+                    attack_sprite, self.attackable_sprites, True
+                )
+                if collision_sprites:
+                    for target_sprite in collision_sprites:
+                        target_sprite.kill()
 
     def run(self):
         # Update and draw the game
