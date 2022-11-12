@@ -39,6 +39,11 @@ class Enemy(Entity):
         self.attack_time = None
         self.attack_cooldown = 400
 
+        # Hit timer
+        self.vulnerable = True
+        self.hit_time = None
+        self.invincibility_duration = 300
+
     def import_graphics(self, name):
         self.animations = {"idle": [], "move": [], "attack": []}
         main_path = f"./images/graphics/monsters/{name}/"
@@ -97,11 +102,12 @@ class Enemy(Entity):
                 self.can_attack = True
 
     def get_damage(self, player, attack_type):
-        if attack_type == "weapon":
-            self.health -= player.get_full_weapon_damage()
-        else:
-            # magic damage
-            pass
+        if self.vulnerable:
+            if attack_type == "weapon":
+                self.health -= player.get_full_weapon_damage()
+            else:
+                # magic damage
+                pass
 
     def check_death(self):
         if self.health <= 0:
