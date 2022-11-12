@@ -5,7 +5,9 @@ from entity import Entity
 
 
 class Player(Entity):
-    def __init__(self, pos, groups, obstacle_sprites, create_attack, destroy_attack, create_magic):
+    def __init__(
+        self, pos, groups, obstacle_sprites, create_attack, destroy_attack, create_magic
+    ):
         super().__init__(groups)
         # stats
         self.stats = {"health": 100, "energy": 60, "attack": 10, "magic": 4, "speed": 5}
@@ -28,8 +30,7 @@ class Player(Entity):
         self.attacking = False
         self.attack_cooldown = 200
         self.attack_time = None
-        self.animation_speed = self.stats['speed'] / 20
-
+        self.animation_speed = self.stats["speed"] / 20
 
         self.obstacle_sprites = obstacle_sprites
 
@@ -105,9 +106,12 @@ class Player(Entity):
                 self.attacking = True
                 self.attack_time = pygame.time.get_ticks()
                 style = list(magic_data.keys())[self.magic_index]
-                strength = list(magic_data.values())[self.magic_index]['strength'] + self.stats['magic']
-                cost = list(magic_data.values())[self.magic_index]['cost']
-                self.create_magic(style,strength,cost)
+                strength = (
+                    list(magic_data.values())[self.magic_index]["strength"]
+                    + self.stats["magic"]
+                )
+                cost = list(magic_data.values())[self.magic_index]["cost"]
+                self.create_magic(style, strength, cost)
 
             if keys[pygame.K_q] and self.can_switch_weapon:
                 self.can_switch_weapon = False
@@ -155,7 +159,10 @@ class Player(Entity):
         current_time = pygame.time.get_ticks()
 
         if self.attacking:
-            if current_time - self.attack_time >= self.attack_cooldown:
+            if (
+                current_time - self.attack_time
+                >= self.attack_cooldown + weapon_data[self.weapon]["cooldown"]
+            ):
                 self.attacking = False
                 self.destroy_attack()
 
@@ -178,6 +185,11 @@ class Player(Entity):
         # set the image
         self.image = animation[int(self.frame_index)]
         self.rect = self.image.get_rect(center=self.hitbox.center)
+
+    def get_full_weapon_damage(self):
+        base_damage = self.stats["attack"]
+        weapon_damage = weapon_data[self.weapon]["damage"]
+        return base_damage + weapon_damage
 
     def update(self):
         self.input()
