@@ -24,6 +24,7 @@ class Player(Entity):
         self.import_player_assets()
         self.status = "down"
         self.frame_index = 0
+        self.mask = pygame.mask.from_surface(self.image)
 
         # Movement
         self.direction = pygame.math.Vector2()
