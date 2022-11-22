@@ -9,7 +9,7 @@ class Player(Entity):
         self, pos, groups, obstacle_sprites, create_attack, destroy_attack, create_magic
     ):
         super().__init__(groups)
-        # stats
+        # Stats
         self.stats = {"health": 100, "energy": 60, "attack": 10, "magic": 4, "speed": 5}
         self.health = self.stats["health"]
         self.energy = self.stats["energy"]
@@ -50,6 +50,11 @@ class Player(Entity):
         self.magic = list(magic_data.keys())[self.magic_index]
         self.can_switch_magic = True
         self.magic_switch_time = None
+
+        # Damage timer
+        self.vulnerable = True
+        self.hurt_time = None
+        self.invulnerability_duration = 500
 
     def import_player_assets(self):
         character_path = "./images/graphics/player/"
@@ -175,17 +180,24 @@ class Player(Entity):
             if current_time - self.magic_switch_time >= self.switch_duration_cooldown:
                 self.can_switch_magic = True
 
+        if not self.vulnerable:
+            if current_time - self.hurt_time >= self.invulnerability_duration:
+                self.vulnerable = True
+
     def animate(self):
         animation = self.animations[self.status]
 
-        # loop over frame index
+        # Loop over frame index
         self.frame_index += self.animation_speed
         if self.frame_index >= len(animation):
             self.frame_index = 0
 
-        # set the image
+        # Set the image
         self.image = animation[int(self.frame_index)]
         self.rect = self.image.get_rect(center=self.hitbox.center)
+
+        # Flicker on damage
+
 
     def get_full_weapon_damage(self):
         base_damage = self.stats["attack"]
