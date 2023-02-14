@@ -9,6 +9,7 @@ from random import choice, random
 from weapon import Weapon
 from ui import UI
 from enemy import Enemy
+from particles import AnimationPlayer
 
 
 class Level:
@@ -29,6 +30,9 @@ class Level:
 
         # user interface
         self.ui = UI()
+
+        # particles
+        self.animation_player = AnimationPlayer()
 
     def create_map(self):
         layouts = {
@@ -99,7 +103,8 @@ class Level:
                                     enemy_name,
                                     (x, y),
                                     [self.visible_sprites, self.attackable_sprites],
-                                    self.obstacle_sprites, self.damage_player
+                                    self.obstacle_sprites,
+                                    self.damage_player,
                                 )
 
         #         if col == "x":
@@ -138,6 +143,7 @@ class Level:
                             target_sprite.get_damage(
                                 self.player, attack_sprite.sprite_type
                             )
+
     def damage_player(self, amount, attack_type):
         if self.player.vulnerable:
             self.player.health -= amount
