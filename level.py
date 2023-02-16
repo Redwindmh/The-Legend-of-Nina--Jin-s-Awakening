@@ -1,21 +1,20 @@
-import imp
 import pygame
 from settings import *
 from tile import Tile
 from player import Player
 from debug import debug
 from support import *
-from random import choice, random
+from random import choice, randint
 from weapon import Weapon
 from ui import UI
 from enemy import Enemy
 from particles import AnimationPlayer
 
-
 class Level:
     def __init__(self):
 
         self.display_surface = pygame.display.get_surface()
+
         # sprite group setup
         self.visible_sprites = YSortCameraGroup()
         self.obstacle_sprites = pygame.sprite.Group()
@@ -139,7 +138,9 @@ class Level:
                     for target_sprite in collision_sprites:
                         if target_sprite.sprite_type == "grass":
                             pos = target_sprite.rect.center
-                            self.animation_player.create_grass_particles(pos,[self.visible_sprites])
+                            offset = pygame.math.Vector2(0,75)
+                            for leaf in range(randint(3,6)):
+                                self.animation_player.create_grass_particles(pos - offset,[self.visible_sprites])
                             target_sprite.kill()
                         else:
                             target_sprite.get_damage(
@@ -151,6 +152,7 @@ class Level:
             self.player.health -= amount
             self.player.vulnerable = False
             self.player.hurt_time = pygame.time.get_ticks()
+            self.animation_player.create_particles(attack_type,self.player.rect.center,[self.visible_sprites])
 
     def run(self):
         # Update and draw the game
@@ -169,18 +171,18 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.half_height = self.display_surface.get_size()[1] // 2
         self.offset = pygame.math.Vector2()
 
-        # creating map floor
+        # Creating map floor
         self.floor_surf = pygame.image.load(
             "./images/graphics/tilemap/ground.png"
         ).convert()
         self.floor_rect = self.floor_surf.get_rect(topleft=(0, 0))
 
     def custom_draw(self, player):
-        # getting the offset
+        # Getting the offset
         self.offset.x = player.rect.centerx - self.half_width
         self.offset.y = player.rect.centery - self.half_height
 
-        # drawing map floor
+        # Drawing map floor
         floor_offset_pos = self.floor_rect.topleft - self.offset
         self.display_surface.blit(self.floor_surf, floor_offset_pos)
 
