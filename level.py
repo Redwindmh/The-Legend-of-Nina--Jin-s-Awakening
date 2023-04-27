@@ -123,7 +123,7 @@ class Level:
 
     def create_magic(self, style, strength, cost):
         if style == 'heal':
-            self.magic_player.heal()
+            self.player_magic.heal(self.player,strength,cost,[self.visible_sprites])
 
         if style == 'flame':
             pass
