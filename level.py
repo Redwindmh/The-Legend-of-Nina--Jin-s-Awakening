@@ -107,6 +107,7 @@ class Level:
                                     self.obstacle_sprites,
                                     self.damage_player,
                                     self.trigger_death_particles,
+                                    self.add_exp,
                                 )
 
         #         if col == "x":
@@ -126,7 +127,7 @@ class Level:
             self.player_magic.heal(self.player,strength,cost,[self.visible_sprites])
 
         if style == 'flame':
-            pass
+            self.player_magic.flame(self.player,cost,[self.visible_sprites,self.attack_sprites])
 
         print(style)
         print(strength)
@@ -166,6 +167,10 @@ class Level:
     def trigger_death_particles(self, pos, particle_type):
 
         self.animation_player.create_particles(particle_type, pos, self.visible_sprites)
+
+    def add_exp(self,amount):
+
+        self.player.exp += amount
 
     def run(self):
         # Update and draw the game
