@@ -1,8 +1,7 @@
-import pygame
+import pygame, sys
 from settings import *
 from support import import_folder
 from entity import Entity
-
 
 class Player(Entity):
     def __init__(
@@ -11,16 +10,16 @@ class Player(Entity):
         super().__init__(groups)
         # Stats
         self.stats = {"health": 100, "energy": 60, "attack": 10, "magic": 4, "speed": 5}
-        self.max_stats = {"health": 300, "energy": 140, "attack": 20, "magic": 10, "speed": 10}
+        self.max_stats = {"health": 300, "energy": 200, "attack": 30, "magic": 20, "speed": 10}
         self.upgrade_cost = {"health": 100, "energy": 100, "attack": 100, "magic": 100, "speed": 100}
         self.health = self.stats["health"]
         self.energy = self.stats["energy"]
-        self.exp = 500
+        self.exp = 5000
         self.speed = self.stats["speed"]
 
         self.image = pygame.image.load("./images/graphics/jin/jin_test.png")
         self.rect = self.image.get_rect(topleft=pos)
-        self.hitbox = self.rect.inflate(0, -26)
+        self.hitbox = self.rect.inflate(-6, HITBOX_OFFSET['player'])
 
         # Graphics setup
         self.import_player_assets()
@@ -57,6 +56,10 @@ class Player(Entity):
         self.vulnerable = True
         self.hurt_time = None
         self.invulnerability_duration = 500
+
+        # Sound importing
+        self.weapon_attack_sound = pygame.mixer.Sound(weapon_data["sword"]["sound"])
+        self.weapon_attack_sound.set_volume(0.4)
 
     def import_player_assets(self):
         character_path = "./images/graphics/player/"
@@ -108,6 +111,7 @@ class Player(Entity):
                 self.attacking = True
                 self.attack_time = pygame.time.get_ticks()
                 self.create_attack()
+                self.weapon_attack_sound.play()
 
             # Magic input
             if keys[pygame.K_LSHIFT]:
@@ -121,6 +125,7 @@ class Player(Entity):
                 cost = list(magic_data.values())[self.magic_index]["cost"]
                 self.create_magic(style, strength, cost)
 
+            # Weapon switching
             if keys[pygame.K_q] and self.can_switch_weapon:
                 self.can_switch_weapon = False
                 self.weapon_switch_time = pygame.time.get_ticks()
@@ -145,13 +150,12 @@ class Player(Entity):
 
     def get_status(self):
 
-        # idle status
+        # Idle status
         if self.direction.x == 0 and self.direction.y == 0:
             if not "idle" in self.status and not "attack" in self.status:
                 self.status = self.status + "_idle"
 
-        if self.attacking:
-            # comment these two lines out to attack while moving
+        if self.attacking and self.stats["speed"] != self.max_stats["speed"]:
             self.direction.x = 0
             self.direction.y = 0
             if not "attack" in self.status:
@@ -216,16 +220,29 @@ class Player(Entity):
         spell_damage = magic_data[self.magic]['strength']
         return base_damage + spell_damage
 
+    def get_value_by_index(self,index):
+        return list(self.stats.values())[index]
+
+    def get_cost_by_index(self,index):
+        return list(self.upgrade_cost.values())[index]
+
     def energy_recovery(self):
         if self.energy < self.stats['energy']:
             self.energy += 0.02 * self.stats['magic']
         else:
             self.energy = self.stats['energy']
 
+    def game_over(self):
+        if self.health <= 0:
+            print("Game Over")
+            pygame.quit()
+            sys.exit()
+
     def update(self):
         self.input()
         self.cooldowns()
         self.get_status()
         self.animate()
-        self.move(self.speed)
+        self.move(self.stats['speed'])
         self.energy_recovery()
+        self.game_over()

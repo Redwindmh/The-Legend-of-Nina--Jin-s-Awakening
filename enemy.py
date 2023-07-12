@@ -38,7 +38,7 @@ class Enemy(Entity):
         # Interaction with player
         self.can_attack = True
         self.attack_time = None
-        self.attack_cooldown = 400
+        self.attack_cooldown = 1500 / self.speed
         self.damage_player = damage_player
         self.trigger_death_particles = trigger_death_particles
         self.add_exp = add_exp
@@ -47,6 +47,14 @@ class Enemy(Entity):
         self.vulnerable = True
         self.hit_time = None
         self.invincibility_duration = 300
+
+        # Sound setup
+        self.attack_sound = pygame.mixer.Sound(enemy_info["attack_sound"])
+        self.damage_sound = pygame.mixer.Sound("./audio/hit.wav")
+        self.death_sound = pygame.mixer.Sound("./audio/death.wav")
+        self.damage_sound.set_volume(0.2)
+        self.death_sound.set_volume(0.2)
+        self.attack_sound.set_volume(0.3)
 
     def import_graphics(self, name):
         self.animations = {"idle": [], "move": [], "attack": []}
@@ -93,6 +101,7 @@ class Enemy(Entity):
         self.frame_index += self.animation_speed
         if self.frame_index >= len(animation):
             if self.status == "attack":
+                self.attack_sound.play()
                 self.can_attack = False
             self.frame_index = 0
 
@@ -103,7 +112,7 @@ class Enemy(Entity):
         if not self.vulnerable:
             alpha = self.wave_value()
             self.image.set_alpha(alpha)
-            self.image.fill("red")
+            # self.image.fill("red")
         else:
             self.image.set_alpha(255)
 
@@ -112,6 +121,7 @@ class Enemy(Entity):
         if not self.can_attack:
             if current_time - self.attack_time >= self.attack_cooldown:
                 self.can_attack = True
+
         if not self.vulnerable:
             if current_time - self.hit_time >= self.invincibility_duration:
                 self.vulnerable = True
@@ -119,11 +129,14 @@ class Enemy(Entity):
     def get_damage(self, player, attack_type):
         if self.vulnerable:
             self.direction = self.get_player_distance_direction(player)[1]
+            # Weapon damage
             if attack_type == "weapon":
                 self.health -= player.get_full_weapon_damage()
+                self.damage_sound.play()
             else:
-                # magic damage
+                # Magic damage
                 self.health -= player.get_full_magic_damage()
+                self.damage_sound.play()
             self.hit_time = pygame.time.get_ticks()
             self.vulnerable = False
 
@@ -131,6 +144,7 @@ class Enemy(Entity):
         if self.health <= 0:
             self.trigger_death_particles(self.rect.center,self.enemy_name)
             self.kill()
+            self.death_sound.play()
             self.add_exp(self.exp)
 
     def hit_reaction(self):

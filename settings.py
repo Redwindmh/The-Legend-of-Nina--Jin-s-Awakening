@@ -1,9 +1,14 @@
 # Basic setup info
-
 WIDTH = 1280
 HEIGHT = 720
 FPS = 60
 TILESIZE = 64
+HITBOX_OFFSET = {
+    'player': -26,
+    'object': -40,
+    'grass': -10,
+    'invisible': 0,
+}
 
 # User interface
 BAR_HEIGHT = 20
@@ -24,32 +29,43 @@ HEALTH_COLOR = "red"
 ENERGY_COLOR = "blue"
 UI_BORDER_COLOR_ACTIVE = "gold"
 
+# Upgrade Menu
+TEXT_COLOR_SELECTED = '#111111'
+BAR_COLOR = '#EEEEEE'
+BAR_COLOR_SELECTED = '#111111'
+UPGRADE_BG_COLOR_SELECTED = '#EEEEEE'
+
 # Weapons
 weapon_data = {
     "sword": {
         "cooldown": 100,
         "damage": 15,
         "graphic": "./images/graphics/weapons/sword/full.png",
+        "sound": "./audio/sword.wav",
     },
     "lance": {
         "cooldown": 400,
         "damage": 30,
         "graphic": "./images/graphics/weapons/lance/full.png",
+        "sound": "./audio/sword.wav",
     },
     "axe": {
         "cooldown": 300,
         "damage": 20,
         "graphic": "./images/graphics/weapons/axe/full.png",
+        "sound": "./audio/sword.wav",
     },
     "rapier": {
         "cooldown": 50,
         "damage": 8,
         "graphic": "./images/graphics/weapons/rapier/full.png",
+        "sound": "./audio/sword.wav",
     },
     "sai": {
         "cooldown": 80,
         "damage": 10,
         "graphic": "./images/graphics/weapons/sai/full.png",
+        "sound": "./audio/sword.wav",
     },
 }
 
@@ -59,11 +75,13 @@ magic_data = {
         "strength": 5,
         "cost": 20,
         "graphic": "./images/graphics/particles/flame/fire.png",
+        "sound": "./audio/fire.wav",
     },
     "heal": {
         "strength": 20,
         "cost": 10,
         "graphic": "./images/graphics/particles/heal/heal.png",
+        "sound": "./audio/heal.wav",
     },
 }
 
