@@ -13,10 +13,11 @@ from magic import PlayerMagic
 from upgrade import Upgrade
 
 class Level:
-    def __init__(self):
+    def __init__(self, game):
 
         self.display_surface = pygame.display.get_surface()
         self.game_paused = False
+        self.game = game
 
         # sprite group setup
         self.visible_sprites = YSortCameraGroup()
@@ -92,6 +93,7 @@ class Level:
                                     self.create_attack,
                                     self.destroy_attack,
                                     self.create_magic,
+                                    self.game
                                 )
                             else:
                                 # Make this into a switch statement so more enemies can be added
