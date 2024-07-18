@@ -9,12 +9,12 @@ class Game:
         pygame.display.set_caption("The Legend of Nina: Jins Awakening")
         self.clock = pygame.time.Clock()
 
-        self.level = Level()
+        self.level = Level(self)
 
         # Music
-        main_theme = pygame.mixer.Sound('./audio/main.ogg')
-        main_theme.set_volume(0.5)
-        main_theme.play(loops = -1)
+        self.main_theme = pygame.mixer.Sound('./audio/main.ogg')
+        self.main_theme.set_volume(0.5)
+        self.main_theme.play(loops = -1)
 
     def run(self):
         while True:

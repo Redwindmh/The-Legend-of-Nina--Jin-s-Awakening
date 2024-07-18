@@ -5,7 +5,7 @@ from entity import Entity
 
 class Player(Entity):
     def __init__(
-        self, pos, groups, obstacle_sprites, create_attack, destroy_attack, create_magic
+        self, pos, groups, obstacle_sprites, create_attack, destroy_attack, create_magic, game
     ):
         super().__init__(groups)
         # Stats
@@ -16,6 +16,7 @@ class Player(Entity):
         self.energy = self.stats["energy"]
         self.exp = 5000
         self.speed = self.stats["speed"]
+        self.game = game
 
         self.image = pygame.image.load("./images/graphics/jin/jin_test.png")
         self.rect = self.image.get_rect(topleft=pos)
@@ -235,8 +236,10 @@ class Player(Entity):
     def game_over(self):
         if self.health <= 0:
             print("Game Over")
-            pygame.quit()
-            sys.exit()
+            self.game.main_theme.stop()
+            self.game.__init__()
+            # pygame.quit()
+            # sys.exit()
 
     def update(self):
         self.input()
